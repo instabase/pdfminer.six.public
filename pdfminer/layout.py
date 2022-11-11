@@ -1,4 +1,3 @@
-import copy
 import heapq
 import logging
 from typing import (
@@ -15,7 +14,6 @@ from typing import (
     Union,
     cast,
 )
-import math
 
 from .pdfcolor import PDFColorSpace
 from .pdffont import PDFFont
