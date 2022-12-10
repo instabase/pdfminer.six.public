@@ -31,7 +31,7 @@ setup(
     license="MIT/X",
     author="Yusuke Shinyama + Philippe Guglielmetti",
     author_email="pdfminer@goulu.net",
-    url="https://github.com/pdfminer/pdfminer.six",
+    url="https://github.com/instabase/pdfminer.six.public",
     scripts=[
         "tools/pdf2txt.py",
         "tools/dumppdf.py",
