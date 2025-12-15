@@ -1,9 +1,10 @@
+import tempfile
 import unittest
 
 import pytest
 
-from helpers import absolute_sample_path
-from tempfilepath import TemporaryFilePath
+from tests.helpers import absolute_sample_path
+from tests.tempfilepath import TemporaryFilePath
 from tools import dumppdf
 
 
@@ -11,9 +12,9 @@ def run(filename, options=None):
     absolute_path = absolute_sample_path(filename)
     with TemporaryFilePath() as output_file_name:
         if options:
-            s = "dumppdf -o %s %s %s" % (output_file_name, options, absolute_path)
+            s = f"dumppdf -o {output_file_name} {options} {absolute_path}"
         else:
-            s = "dumppdf -o %s %s" % (output_file_name, absolute_path)
+            s = f"dumppdf -o {output_file_name} {absolute_path}"
 
         dumppdf.main(s.split(" ")[1:])
 
@@ -55,3 +56,26 @@ class TestDumpPDF(unittest.TestCase):
         """Known issue: crash in dumpxml writing binary to text stream."""
         with pytest.raises(TypeError):
             run("simple1.pdf", "-b -a")
+
+    def test_encryption_aes128(self):
+        """Issue 1122: need to remove padding from AES-encrypted strings"""
+        self.assert_de_DE("encryption/aes-128.pdf")
+
+    def test_encryption_aes256(self):
+        """Issue 1122: need to remove padding from AES-encrypted strings"""
+        self.assert_de_DE("encryption/aes-256.pdf")
+
+    def assert_de_DE(self, path):
+        absolute_path = absolute_sample_path(path)
+        with tempfile.NamedTemporaryFile("w+") as outfh:
+            dumppdf.main(
+                ["--password", "foo", "--objects", "1", "-o", outfh.name, absolute_path]
+            )
+            outfh.flush()
+            outfh.seek(0, 0)
+            for spam in outfh:
+                if "de-DE" in spam:
+                    self.assertEqual(
+                        spam.strip(),
+                        """<value><string size="5">de-DE</string></value>""",
+                    )

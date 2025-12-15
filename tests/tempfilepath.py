@@ -1,7 +1,8 @@
 """Helper module, which provides a TemporaryFilePath() context manager"""
 
-import tempfile
 import os
+import tempfile
+from typing import Optional
 
 
 class TemporaryFilePath:
@@ -12,13 +13,14 @@ class TemporaryFilePath:
     attempt to delete the file with the generated file name.
 
     Example:
-
+    -------
         >>> with TemporaryFilePath() as temp_file_name:
         >>>    with open(temp_file_name, "w") as temp_file:
         >>>        temp_file.write("some test data, which goes to the file")
         >>>        # some test code is here which reads data out of temp_file
 
     Args:
+    ----
         suffix: If 'suffix' is not None, the file name will end with that
             suffix, otherwise there will be no suffix.
         prefix: If 'prefix' is not None, the file name will begin with that
@@ -26,9 +28,16 @@ class TemporaryFilePath:
         dir: If 'dir' is not None, the file will be created in that directory,
             otherwise a default directory is used.
         delete: whether the file is deleted at the end (default True)
+
     """
 
-    def __init__(self, suffix=None, prefix=None, dir=None, delete=True):
+    def __init__(
+        self,
+        suffix: Optional[str] = None,
+        prefix: Optional[str] = None,
+        dir: Optional[str] = None,
+        delete: bool = True,
+    ):
         self.suffix = suffix
         self.prefix = prefix
         self.dir = dir
@@ -41,7 +50,9 @@ class TemporaryFilePath:
         this method only returns the filepath of the non-existing file.
         """
         with tempfile.NamedTemporaryFile(
-            suffix=self.suffix, prefix=self.prefix, dir=self.dir
+            suffix=self.suffix,
+            prefix=self.prefix,
+            dir=self.dir,
         ) as file:
             self.temp_file_name = file.name
 

@@ -1,20 +1,21 @@
+import filecmp
 import os
 from shutil import rmtree
 from tempfile import mkdtemp
-import filecmp
+from typing import List
 
-import tools.pdf2txt as pdf2txt
-from helpers import absolute_sample_path
-from tempfilepath import TemporaryFilePath
+from tests.helpers import absolute_sample_path
+from tests.tempfilepath import TemporaryFilePath
+from tools import pdf2txt
 
 
 def run(sample_path, options=None):
     absolute_path = absolute_sample_path(sample_path)
     with TemporaryFilePath() as output_file_name:
         if options:
-            s = "pdf2txt -o{} {} {}".format(output_file_name, options, absolute_path)
+            s = f"pdf2txt -o{output_file_name} {options} {absolute_path}"
         else:
-            s = "pdf2txt -o{} {}".format(output_file_name, absolute_path)
+            s = f"pdf2txt -o{output_file_name} {absolute_path}"
 
         pdf2txt.main(s.split(" ")[1:])
 
@@ -64,8 +65,25 @@ class TestPdf2Txt:
 
     def test_contrib_issue_350(self):
         """Regression test for
-        https://github.com/pdfminer/pdfminer.six/issues/350"""
+        https://github.com/pdfminer/pdfminer.six/issues/350
+        """
         run("contrib/issue-00352-asw-oct96-p41.pdf")
+
+    def test_contrib_issue_1059_textseq(self):
+        """Ensure that CMaps are robust to non-strings in text
+        sequences
+        (https://github.com/pdfminer/pdfminer.six/issues/1059)."""
+        run("contrib/issue-1059-cmap-decode.pdf")
+
+    def test_contrib_issue_1061_inline(self):
+        """Ensure that colour spaces are saved on the graphics stack
+        (https://github.com/pdfminer/pdfminer.six/issues/1061)"""
+        run("contrib/issue-1061-colour-space-stack.pdf")
+
+    def test_contrib_issue_1062_inline(self):
+        """Ensure that filters are accepted as indirect objects
+        (https://github.com/pdfminer/pdfminer.six/issues/1062)"""
+        run("contrib/issue-1062-filters.pdf")
 
     def test_scancode_patchelf(self):
         """Regression test for https://github.com/euske/pdfminer/issues/96"""
@@ -120,7 +138,7 @@ class TestPdf2Txt:
 
 class TestDumpImages:
     @staticmethod
-    def extract_images(input_file, *args):
+    def extract_images(input_file: str, *args: str) -> List[str]:
         output_dir = mkdtemp()
         with TemporaryFilePath() as output_file_name:
             commands = [
@@ -177,3 +195,23 @@ class TestDumpImages:
     def test_nonfree_cmp_itext_logo(self):
         """Test a pdf with Type3 font"""
         run("nonfree/cmp_itext_logo.pdf")
+
+    def test_contrib_issue_495_pdfobjref(self):
+        """Test for extracting a zipped pdf"""
+        filepath = absolute_sample_path("contrib/issue_495_pdfobjref.pdf")
+        image_files = self.extract_images(filepath)
+        assert image_files[0].endswith("jpg")
+
+    def test_contrib_issue_1008_inline(self):
+        """Test for parsing and extracting inline images"""
+        filepath = absolute_sample_path("contrib/issue-1008-inline-ascii85.pdf")
+        image_files = self.extract_images(filepath)
+        assert len(image_files) == 23
+        assert all(x.endswith(".bmp") for x in image_files)
+
+    def test_contrib_issue_1057_tiff_predictor(self) -> None:
+        """Test for extracting tiff image"""
+        filepath = absolute_sample_path("contrib/issue-1057-tiff-predictor.pdf")
+        image_files = self.extract_images(filepath)
+        assert len(image_files) == 1
+        assert image_files[0].endswith(".bmp")
