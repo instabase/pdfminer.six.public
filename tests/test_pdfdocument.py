@@ -2,13 +2,15 @@ import itertools
 
 import pytest
 
-from helpers import absolute_sample_path
 from pdfminer.pdfdocument import PDFDocument, PDFNoPageLabels
+from pdfminer.pdfexceptions import PDFObjectNotFound
+from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
-from pdfminer.pdftypes import PDFObjectNotFound, dict_value, int_value
+from pdfminer.pdftypes import dict_value, int_value
+from tests.helpers import absolute_sample_path
 
 
-class TestPdfDocument(object):
+class TestPdfDocument:
     def test_get_zero_objid_raises_pdfobjectnotfound(self):
         with open(absolute_sample_path("simple1.pdf"), "rb") as in_file:
             parser = PDFParser(in_file)
@@ -48,3 +50,11 @@ class TestPdfDocument(object):
 
             with pytest.raises(PDFNoPageLabels):
                 doc.get_page_labels()
+
+    def test_annotations(self):
+        path = absolute_sample_path("contrib/issue-1082-annotations.pdf")
+        with open(path, "rb") as fp:
+            parser = PDFParser(fp)
+            doc = PDFDocument(parser)
+            for i, page in enumerate(PDFPage.create_pages(doc)):
+                print(page)

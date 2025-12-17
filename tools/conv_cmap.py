@@ -12,14 +12,12 @@ class CMapConverter:
         self.is_vertical = {}
         self.cid2unichr_h = {}  # {cid: unichr}
         self.cid2unichr_v = {}  # {cid: unichr}
-        return
 
     def get_encs(self):
         return self.code2cid.keys()
 
     def get_maps(self, enc):
         if enc.endswith("-H"):
-
             (hmapenc, vmapenc) = (enc, None)
         elif enc == "H":
             (hmapenc, vmapenc) = ("H", "V")
@@ -63,7 +61,6 @@ class CMapConverter:
                 b = code[-1]
                 if force or ((b not in dmap) or dmap[b] == cid):
                     dmap[b] = cid
-                return
 
             def add(unimap, enc, code):
                 try:
@@ -77,7 +74,6 @@ class CMapConverter:
                     pass
                 except UnicodeError:
                     pass
-                return
 
             def pick(unimap):
                 chars = list(unimap.items())
@@ -88,7 +84,7 @@ class CMapConverter:
             cid = int(values[0])
             unimap_h = {}
             unimap_v = {}
-            for (enc, value) in zip(encs, values):
+            for enc, value in zip(encs, values):
                 if enc == "CID":
                     continue
                 if value == "*":
@@ -130,15 +126,12 @@ class CMapConverter:
             if unimap_v or unimap_h:
                 self.cid2unichr_v[cid] = pick(unimap_v or unimap_h)
 
-        return
-
     def dump_cmap(self, fp, enc):
         data = dict(
             IS_VERTICAL=self.is_vertical.get(enc, False),
             CODE2CID=self.code2cid.get(enc),
         )
         fp.write(pickle.dumps(data, 2))
-        return
 
     def dump_unicodemap(self, fp):
         data = dict(
@@ -146,7 +139,6 @@ class CMapConverter:
             CID2UNICHR_V=self.cid2unichr_v,
         )
         fp.write(pickle.dumps(data, 2))
-        return
 
 
 def main(argv):
@@ -156,7 +148,7 @@ def main(argv):
 
     def usage():
         print(
-            "usage: %s [-c enc=codec] output_dir regname [cid2code.txt ...]" % argv[0]
+            "usage: %s [-c enc=codec] output_dir regname [cid2code.txt ...]" % argv[0],
         )
         return 100
 
@@ -165,7 +157,7 @@ def main(argv):
     except getopt.GetoptError:
         return usage()
     enc2codec = {}
-    for (k, v) in opts:
+    for k, v in opts:
         if k == "-c":
             (enc, _, codec) = v.partition("=")
             enc2codec[enc] = codec
@@ -197,7 +189,6 @@ def main(argv):
     fp = gzip.open(path, "wb")
     converter.dump_unicodemap(fp)
     fp.close()
-    return
 
 
 if __name__ == "__main__":

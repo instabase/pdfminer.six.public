@@ -3,26 +3,141 @@ All notable changes in pdfminer.six will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [20250506]
+
+## Added
+
+- Support for extracting images with TIFF predictor ([#1058](https://github.com/pdfminer/pdfminer.six/pull/1058))
+
+## Fixed
+
+- Correct tightest fitting bounding boxes for rotated content ([#1114](https://github.com/pdfminer/pdfminer.six/pull/1114))
+- `TypeError` when passing wrong number of arguments to `safe_rgb` ([#1118](https://github.com/pdfminer/pdfminer.six/pull/1118))
+- `OverflowError` in `safe_float` when input is too large ([#1121](https://github.com/pdfminer/pdfminer.six/pull/1121))
+- Saving colour spaces on the graphics stack ([#1119](https://github.com/pdfminer/pdfminer.six/pull/1119))
+- Remove padding from AES-encrypted strings([#1123](https://github.com/pdfminer/pdfminer.six/pull/1123))
+
+## [20250416]
+
+### Fixed
+
+- `TypeError` when parsing font width with indirect object references ([#1098](https://github.com/pdfminer/pdfminer.six/pull/1098))
+- `ValueError` when loading xref with invalid position or generation numbers that cannot be parsed as int ([#1099](https://github.com/pdfminer/pdfminer.six/pull/1099))
+- Safely converting PDF stack objects to float or int in PDFInterpreter ([#1100](https://github.com/pdfminer/pdfminer.six/pull/1100))
+- `TypeError` when parsing font bbox with incorrect values ([#1103](https://github.com/pdfminer/pdfminer.six/pull/1103))
+- `ValueError` on incorrect stream lengths for ASCII85 data ([#1112](https://github.com/pdfminer/pdfminer.six/pull/1112))
+
+## [20250327]
+
+### Added
+
+- Support for Python 3.13 ([#1092](https://github.com/pdfminer/pdfminer.six/pull/1092))
+
+### Changed
+
+- Reduce memory overhead on runlength encoding by using lists ([#1055](https://github.com/pdfminer/pdfminer.six/pull/1055))
+- Using `pyproject.toml` instead of `setup.py` ([#1028](https://github.com/pdfminer/pdfminer.six/pull/1028))
+
+### Fixed
+
+- `TypeError` when CID character widths are not parseable as floats ([#1001](https://github.com/pdfminer/pdfminer.six/pull/1001))
+- `TypeError` raised by extract_text method with compressed PDF file ([#1029](https://github.com/pdfminer/pdfminer.six/pull/1029))
+- `PSBaseParser` can't handle tokens split across end of buffer ([#1030](https://github.com/pdfminer/pdfminer.six/pull/1030))
+- `TypeError` when CropBox is an indirect object reference ([#1004](https://github.com/pdfminer/pdfminer.six/issues/1004))
+- Remove redundant line to be able to recognize rectangles ([#1066](https://github.com/pdfminer/pdfminer.six/pull/1066))
+- Support indirect objects for filters ([#1062](https://github.com/pdfminer/pdfminer.six/pull/1068))
+- Make sure `bytes` is `bytes` where it counts ([#1069](https://github.com/pdfminer/pdfminer.six/pull/1069))
+
+### Removed
+
+- Support for Python 3.8 ([#1091](https://github.com/pdfminer/pdfminer.six/pull/1091))
+
+## [20250324]
+
+### Changed
+
+- Using absolute instead of relative imports ([[#995](https://github.com/pdfminer/pdfminer.six/pull/995)])
+- Using standard library functions for ascii85 and asciihex ([#1031](https://github.com/pdfminer/pdfminer.six/pull/1031))
+
+### Deprecated
+
+- The third argument (generation number) to `PDFObjRef` ([#972](https://github.com/pdfminer/pdfminer.six/pull/972))
+
+### Fixed
+
+- `TypeError` when corrupt PDF object reference cannot be parsed as int ([#972](https://github.com/pdfminer/pdfminer.six/pull/972))])
+- `TypeError` when corrupt PDF literal cannot be converted to str ([#978](https://github.com/pdfminer/pdfminer.six/pull/978))
+- `ValueError` when corrupt PDF specifies a negative xref location ([#980](http://github.com/pdfminer/pdfminer.six/pull/980))
+- `ValueError` when corrupt PDF specifies an invalid mediabox ([#987](https://github.com/pdfminer/pdfminer.six/pull/987))
+- `RecursionError` when corrupt PDF specifies a recursive /Pages object ([#998](https://github.com/pdfminer/pdfminer.six/pull/998))
+- `TypeError` when corrupt PDF specifies text-positioning operators with invalid values ([#1000](https://github.com/pdfminer/pdfminer.six/pull/1000))
+- inline image parsing fails when stream data contains "EI\n" ([#1008](https://github.com/pdfminer/pdfminer.six/issues/1008
+- `TypeError` when parsing object reference as mediabox ([#1082](https://github.com/pdfminer/pdfminer.six/issues/1082))
+
+### Removed
+
+- Deprecated tools, functions and classes ([#974](https://github.com/pdfminer/pdfminer.six/pull/974))
+
+## [20240706]
+
+### Added
+
+- Support for zipped jpeg's ([#938](https://github.com/pdfminer/pdfminer.six/pull/938))
+- Fuzzing harnesses for integration into Google's OSS-Fuzz ([949](https://github.com/pdfminer/pdfminer.six/pull/949))
+- Support for setuptools-git-versioning version 2.0.0 ([#957](https://github.com/pdfminer/pdfminer.six/pull/957))
+
+### Fixed
+
+- Resolving mediabox and pdffont ([#834](https://github.com/pdfminer/pdfminer.six/pull/834))
+- Keywords that aren't terminated by the pattern `END_KEYWORD` before end-of-stream are parsed ([#885](https://github.com/pdfminer/pdfminer.six/pull/885))
+- `ValueError` wrong error message when specifying codec for text output  ([#902](https://github.com/pdfminer/pdfminer.six/pull/902))
+- Resolve stream filter parameters ([#906](https://github.com/pdfminer/pdfminer.six/pull/906))
+- Reading cmap's with whitespace in the name ([#935](https://github.com/pdfminer/pdfminer.six/pull/935))
+- Optimize `apply_png_predictor` by using lists ([#912](https://github.com/pdfminer/pdfminer.six/pull/912))
+
+### Changed
+
+- Updated Python 3.7 syntax to 3.8 ([#956](https://github.com/pdfminer/pdfminer.six/pull/956))
+- Updated all Python version specifications to a minimum of 3.8 ([#969](https://github.com/pdfminer/pdfminer.six/pull/969))
+
+## [20231228]
+
+### Removed
+- Support for Python 3.6 and 3.7 ([#921](https://github.com/pdfminer/pdfminer.six/pull/921))
 
 ### Added
 
 - Output converter for the hOCR format ([#651](https://github.com/pdfminer/pdfminer.six/pull/651))
 - Font name aliases for Arial, Courier New and Times New Roman ([#790](https://github.com/pdfminer/pdfminer.six/pull/790))
+- Documentation on why special characters can sometimes not be extracted ([#829](https://github.com/pdfminer/pdfminer.six/pull/829))
+- Storing Bezier path and dashing style of line in LTCurve ([#801](https://github.com/pdfminer/pdfminer.six/pull/801))
 
 ### Fixed
 
+- Broken CI/CD pipeline by setting upper version limit for black, mypy, pip and setuptools ([#921](https://github.com/pdfminer/pdfminer.six/pull/921))
+- `flake8` failures ([#921](https://github.com/pdfminer/pdfminer.six/pull/921))
 - `ValueError` when bmp images with 1 bit channel are decoded ([#773](https://github.com/pdfminer/pdfminer.six/issues/773))
 - `ValueError` when trying to decrypt empty metadata values ([#766](https://github.com/pdfminer/pdfminer.six/issues/766))
 - Sphinx errors during building of documentation ([#760](https://github.com/pdfminer/pdfminer.six/pull/760))
 - `TypeError` when getting default width of font ([#720](https://github.com/pdfminer/pdfminer.six/issues/720))
 - Installing typing-extensions on Python 3.6 and 3.7 ([#775](https://github.com/pdfminer/pdfminer.six/pull/775))
 - `TypeError` in cmapdb.py when parsing null characters ([#768](https://github.com/pdfminer/pdfminer.six/pull/768))
-- Color "convenience operators" now (per spec) also set color space ([#779](https://github.com/pdfminer/pdfminer.six/issues/779))
+- Color "convenience operators" now (per spec) also set color space ([#794](https://github.com/pdfminer/pdfminer.six/pull/794))
+- `ValueError` when extracting images, due to breaking changes in Pillow ([#827](https://github.com/pdfminer/pdfminer.six/pull/827))
+- Small typo's and issues in the documentation ([#828](https://github.com/pdfminer/pdfminer.six/pull/828))
+- Ignore non-Unicode cmaps in TrueType fonts ([#806](https://github.com/pdfminer/pdfminer.six/pull/806))
+
+### Changed
+
+- Using non-hardcoded version string and setuptools-git-versioning to enable installation from source and building on Python 3.12 ([#922](https://github.com/pdfminer/pdfminer.six/issues/922))
 
 ### Deprecated
 
 - Usage of `if __name__ == "__main__"` where it was only intended for testing purposes ([#756](https://github.com/pdfminer/pdfminer.six/pull/756))
+
+### Removed
+
+- Support for Python 3.6 and 3.7 because they are end-of-life ([#923](https://github.com/pdfminer/pdfminer.six/pull/923))
 
 ## [20220524]
 
@@ -142,7 +257,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Hiding fallback xref by default from dumppdf.py output ([#431](https://github.com/pdfminer/pdfminer.six/pull/431))
 - Raise a warning instead of an error when extracting text from a non-extractable PDF ([#453](https://github.com/pdfminer/pdfminer.six/pull/453))
 - Switched from pycryptodome to cryptography package for AES decryption ([#456](https://github.com/pdfminer/pdfminer.six/pull/456))
-  
+
 ## [20200517]
 
 ### Added
