@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pdfminer.six"
-dynamic = ["version"]
+version = "20251107"
 description = "PDF parser and analyzer"
 readme = "README.md"
 license = "MIT"
@@ -67,7 +67,9 @@ script-files = [
     "tools/dumppdf.py",
 ]
 
-[tool.setuptools_scm]
+# setuptools_scm not used - version is hardcoded above
+# [tool.setuptools_scm]
+# fallback_version = "20251107"
 
 [tool.ruff.lint]
 extend-select = [
