@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union
+from typing import Any
 
 import pytest
 
@@ -8,7 +8,7 @@ from pdfminer.pdftypes import PDFObjRef
 from pdfminer.psparser import PSLiteral
 
 
-def test_get_cmap_from_pickle():
+def test_get_cmap():
     """Test if cmap file is read from pdfminer/cmap
 
     Regression test for https://github.com/pdfminer/pdfminer.six/issues/391
@@ -40,9 +40,9 @@ class MockPdfFont(PDFFont):
     ],
 )
 def test_pdffont_char_width_defaults(
-    msg: str, widths: Dict[Union[str, int], float], expected: float
+    msg: str, widths: dict[str | int, float], expected: float
 ) -> None:
-    pdffont = MockPdfFont(descriptor=dict(), widths=widths, default_width=100.0)
+    pdffont = MockPdfFont(descriptor={}, widths=widths, default_width=100.0)
 
     assert pdffont.char_width(0) == expected, msg
 
