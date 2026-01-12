@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pdfminer.six"
-version = "20251107"
+version = "20251230"
 description = "PDF parser and analyzer"
 readme = "README.md"
 license = "MIT"
@@ -74,7 +74,7 @@ script-files = [
 
 # setuptools_scm not used - version is hardcoded above
 # [tool.setuptools_scm]
-# fallback_version = "20251107"
+# fallback_version = "20251230"
 
 [tool.ruff]
 target-version = "py310"
