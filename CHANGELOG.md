@@ -3,9 +3,75 @@ All notable changes in pdfminer.six will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [20260107]
+
+### Added
+
+- Support cmap types 6, 10 and 12 ([#598](https://github.com/pdfminer/pdfminer.six/pull/1213))
+
+### Fixed
+
+- Encapsulate error when failing to get attribute or data from stream ([#1225](https://github.com/pdfminer/pdfminer.six/pull/1225), [#1226](https://github.com/pdfminer/pdfminer.six/pull/1226))
+- Validate maximum size of xref start ([#1227](https://github.com/pdfminer/pdfminer.six/pull/1227))
+- Use lazy %-style formatting for logging ([#1234](https://github.com/pdfminer/pdfminer.six/pull/1234))
+
+### Removed
+
+- Unused methods close, tell and poll on PSBaseParser ([#1230](https://github.com/pdfminer/pdfminer.six/pull/1230))
+
+## [20251230]
+
+### Security
+
+- Eliminated arbitrary code execution vulnerability (CVE-2025-64512) by replacing pickle CMap storage with json - users with custom pickle CMaps can use `tools/convert_cmaps_to_json.py` to convert to JSON format ([#1172](https://github.com/pdfminer/pdfminer.six/pull/1172)))
+
+## [20251229]
+
+### Added
+
+- Support for colored and uncolored tiling patterns per ISO 32000 ([#1171](https://github.com/pdfminer/pdfminer.six/pull/1171))
+- Pre-commit hooks for automated code quality checks ([#1215](https://github.com/pdfminer/pdfminer.six/pull/1215))
+- Ruff rules for for modernized Python syntax ([#1218](https://github.com/pdfminer/pdfminer.six/pull/1218))
+
+### Changed
+
+- Using makefile instead of nox for local development ([#1222](https://github.com/pdfminer/pdfminer.six/pull/1222))
+
+### Fixed
+
+- Fix `struct.error` when processing PDFs with odd-length font encoding buffers ([#1169](https://github.com/pdfminer/pdfminer.six/pull/1169))
+- `PSBaseParser` combines tokens split across streams ([#1158](https://github.com/pdfminer/pdfminer.six/pull/1158))
+- Improve exception handling in `PDFDocument` with more precise error propagation ([#1220](https://github.com/pdfminer/pdfminer.six/pull/1220))
+
+## [20251227]
+
+### Added
+
+- Support for Python 3.14 ([#1209](https://github.com/pdfminer/pdfminer.six/pull/1209))
+
+### Changed
+
+- Refuse to execute circular references to content streams (including Form XObjects) ([#1143](https://github.com/pdfminer/pdfminer.six/pull/1143))
+
+### Fixed
+
+- `IndexError` when saving image with no filters`` ([#1117](https://github.com/pdfminer/pdfminer.six/pull/1135))
+- Copying color space scs and ncs ([#1140](https://github.com/pdfminer/pdfminer.six/pull/1140))
+- Correct linewidth calculation in `PDFPageInterpreter.do_w` ([#1165](https://github.com/pdfminer/pdfminer.six/issues/1165))
+
+### Removed
+
+- Support for Python 3.9 ([#1208](https://github.com/pdfminer/pdfminer.six/pull/1208))
+
+## [20251107]
+
+### Fixed
+
+- Arbitrary code execution when loading pickle cmaps ([issue](https://github.com/pdfminer/pdfminer.six/security/advisories/GHSA-wf5f-4jwr-ppcp))
+
 ## [20250506]
 
-## Added
+### Added
 
 - Support for extracting images with TIFF predictor ([#1058](https://github.com/pdfminer/pdfminer.six/pull/1058))
 
@@ -16,6 +82,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `OverflowError` in `safe_float` when input is too large ([#1121](https://github.com/pdfminer/pdfminer.six/pull/1121))
 - Saving colour spaces on the graphics stack ([#1119](https://github.com/pdfminer/pdfminer.six/pull/1119))
 - Remove padding from AES-encrypted strings([#1123](https://github.com/pdfminer/pdfminer.six/pull/1123))
+- TrueType fonts without encoding now correctly default to WinAnsiEncoding ([#1164](https://github.com/pdfminer/pdfminer.six/pull/1164))
 
 ## [20250416]
 
@@ -179,7 +246,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
-- Hande decompression error due to CRC checksum error ([#637](https://github.com/pdfminer/pdfminer.six/pull/637))
+- Handle decompression error due to CRC checksum error ([#637](https://github.com/pdfminer/pdfminer.six/pull/637))
 - Regression (since 20191107) in `LTLayoutContainer.group_textboxes` that returned some text lines out of order ([#659](https://github.com/pdfminer/pdfminer.six/pull/659))
 - Add handling of JPXDecode filter to enable extraction of images for some pdfs ([#645](https://github.com/pdfminer/pdfminer.six/pull/645))
 - Fix extraction of jbig2 files, which was producing invalid files ([#652](https://github.com/pdfminer/pdfminer.six/pull/653))
@@ -203,7 +270,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 - `KeyError` when `'Encrypt'` but not `'ID'` present in `trailer` ([#594](https://github.com/pdfminer/pdfminer.six/pull/594))
-- Fix issue of ValueError and KeyError rasied in PDFdocument and PDFparser ([#573](https://github.com/pdfminer/pdfminer.six/pull/574))
+- Fix issue of ValueError and KeyError raised in PDFdocument and PDFparser ([#573](https://github.com/pdfminer/pdfminer.six/pull/574))
 - Fix issue of TypeError: cannot unpack non-iterable PDFObjRef object, when unpacking the value of 'DW2' ([#529](https://github.com/pdfminer/pdfminer.six/pull/529))
 - Fix `PermissionError` when creating temporary filepaths on windows when running tests ([#484](https://github.com/pdfminer/pdfminer.six/pull/484))
 - Fix `AttributeError` when dumping a TOC with bytes destinations ([#600](https://github.com/pdfminer/pdfminer.six/pull/600))
@@ -314,18 +381,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Deprecated
 - The argument `_py2_no_more_posargs` because Python2 is removed on January
-, 2020 ([#328](https://github.com/pdfminer/pdfminer.six/pull/328) and 
+, 2020 ([#328](https://github.com/pdfminer/pdfminer.six/pull/328) and
 [#307](https://github.com/pdfminer/pdfminer.six/pull/307))
 
 ### Added
 - Simple wrapper to easily extract text from a PDF file [#330](https://github.com/pdfminer/pdfminer.six/pull/330)
 - Support for extracting JBIG2 encoded images ([#311](https://github.com/pdfminer/pdfminer.six/pull/311) and [#46](https://github.com/pdfminer/pdfminer.six/pull/46))
-- Sphinx documentation that is published on 
+- Sphinx documentation that is published on
   [Read the Docs](https://pdfminersix.readthedocs.io/)
   ([#329](https://github.com/pdfminer/pdfminer.six/pull/329))
 
 ### Fixed
-- Unhandled AssertionError when dumping pdf containing reference to object id 0 
+- Unhandled AssertionError when dumping pdf containing reference to object id 0
  ([#318](https://github.com/pdfminer/pdfminer.six/pull/318))
 - Debug flag actually changes logging level to debug for pdf2txt.py and
  dumppdf.py ([#325](https://github.com/pdfminer/pdfminer.six/pull/325))
@@ -353,7 +420,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Resolve indirect objects for width and bounding boxes for fonts ([#273](https://github.com/pdfminer/pdfminer.six/pull/273))
 - Actually updating stroke color in graphic state ([#298](https://github.com/pdfminer/pdfminer.six/pull/298))
 - Interpret (invalid) negative font descent as a positive descent ([#203](https://github.com/pdfminer/pdfminer.six/pull/203))
-- Correct colorspace comparision for images ([#132](https://github.com/pdfminer/pdfminer.six/pull/132))
+- Correct colorspace comparison for images ([#132](https://github.com/pdfminer/pdfminer.six/pull/132))
 - Allow for bounding boxes with zero height or width by removing assertion ([#246](https://github.com/pdfminer/pdfminer.six/pull/246))
 
 ### Changed
