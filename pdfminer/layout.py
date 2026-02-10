@@ -33,6 +33,8 @@ logger = logging.getLogger(__name__)
 
 
 class IndexAssigner:
+    __slots__ = ('index',)
+
     def __init__(self, index: int = 0) -> None:
         self.index = index
 
@@ -72,6 +74,10 @@ class LAParams:
     :param all_texts: If layout analysis should be performed on text in
         figures.
     """
+    __slots__ = (
+        'line_overlap', 'char_margin', 'line_margin', 'word_margin',
+        'boxes_flow', 'detect_vertical', 'all_texts',
+    )
 
     def __init__(
         self,
@@ -132,7 +138,10 @@ class LTText:
 
 class LTComponent(LTItem):
     """Object with a bounding box"""
-    __slots__ = ('bbox', 'matrix', '_objs') # type: ignore
+    __slots__ = (
+        'bbox', 'x0', 'y0', 'x1', 'y1', 'width', 'height',
+        'matrix', '_objs',
+    )  # type: ignore
 
     def __init__(self, bbox: Rect) -> None:
         LTItem.__init__(self)
@@ -212,6 +221,10 @@ class LTCurve(LTComponent):
 
     `dashing_style` contains the Dashing information if any.
     """
+    __slots__ = (
+        'pts', 'linewidth', 'stroke', 'fill', 'evenodd',
+        'stroking_color', 'non_stroking_color', 'original_path', 'dashing_style',
+    )  # type: ignore
 
     def __init__(
         self,
@@ -311,6 +324,7 @@ class LTImage(LTComponent):
 
     Embedded images can be in JPEG, Bitmap or JBIG2.
     """
+    __slots__ = ('name', 'stream', 'srcsize', 'imagemask', 'bits', 'colorspace')  # type: ignore
 
     def __init__(self, name: str, stream: PDFStream, bbox: Rect) -> None:
         LTComponent.__init__(self, bbox)
@@ -337,6 +351,7 @@ class LTAnno(LTItem, LTText):
     not, as these are "virtual" characters, inserted by a layout analyzer
     according to the relationship between two characters (e.g. a space).
     """
+    __slots__ = ('_text',)  # type: ignore
 
     def __init__(self, text: str) -> None:
         self._text = text
@@ -347,6 +362,7 @@ class LTAnno(LTItem, LTText):
 
 class LTChar(LTComponent, LTText):
     """Actual letter in the text as a Unicode string."""
+    __slots__ = ('_text', 'fontname', 'ncs', 'graphicstate', 'adv', 'upright', 'size')  # type: ignore
 
     def __init__(
         self,
@@ -473,6 +489,7 @@ class LTTextLine(LTTextContainer[TextLineElement]):
     The characters are aligned either horizontally or vertically, depending on
     the text's writing mode.
     """
+    __slots__ = ('word_margin',)  # type: ignore
 
     def __init__(self, word_margin: float) -> None:
         super().__init__()
@@ -498,6 +515,8 @@ class LTTextLine(LTTextContainer[TextLineElement]):
 
 
 class LTTextLineHorizontal(LTTextLine):
+    __slots__ = ('_x1',)  # type: ignore
+
     def __init__(self, word_margin: float) -> None:
         LTTextLine.__init__(self, word_margin)
         self._x1: float = +INF
@@ -561,6 +580,8 @@ class LTTextLineHorizontal(LTTextLine):
 
 
 class LTTextLineVertical(LTTextLine):
+    __slots__ = ('_y0',)  # type: ignore
+
     def __init__(self, word_margin: float) -> None:
         LTTextLine.__init__(self, word_margin)
         self._y0: float = -INF
@@ -630,6 +651,7 @@ class LTTextBox(LTTextContainer[LTTextLine]):
     necessarily represents a logical boundary of the text. It contains a list
     of LTTextLine objects.
     """
+    __slots__ = ('index',)  # type: ignore
 
     def __init__(self) -> None:
         LTTextContainer.__init__(self)
@@ -697,6 +719,8 @@ class LTTextGroupTBRL(LTTextGroup):
 
 
 class LTLayoutContainer(LTContainer[LTComponent]):
+    __slots__ = ('groups',)  # type: ignore
+
     def __init__(self, bbox: Rect) -> None:
         LTContainer.__init__(self, bbox)
         self.groups: list[LTTextGroup] | None = None
@@ -951,6 +975,7 @@ class LTFigure(LTLayoutContainer):
     another PDF document within a page. Note that LTFigure objects can appear
     recursively.
     """
+    __slots__ = ('name',)  # type: ignore
 
     def __init__(self, name: str, bbox: Rect, matrix: Matrix) -> None:
         self.name = name
@@ -979,6 +1004,7 @@ class LTPage(LTLayoutContainer):
     Like any other LTLayoutContainer, an LTPage can be iterated to obtain child
     objects like LTTextBox, LTFigure, LTImage, LTRect, LTCurve and LTLine.
     """
+    __slots__ = ('pageid', 'rotate')  # type: ignore
 
     def __init__(self, pageid: int, bbox: Rect, rotate: float = 0) -> None:
         LTLayoutContainer.__init__(self, bbox)
