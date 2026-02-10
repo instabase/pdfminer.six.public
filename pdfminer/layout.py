@@ -120,6 +120,7 @@ class LAParams:
 
 class LTItem:
     """Interface for things that can be analyzed"""
+    __slots__ = ()
 
     def analyze(self, laparams: LAParams) -> None:
         """Perform the layout analysis."""
@@ -127,6 +128,7 @@ class LTItem:
 
 class LTText:
     """Interface for things that have text"""
+    __slots__ = ()
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.get_text()!r}>"
@@ -258,7 +260,7 @@ class LTLine(LTCurve):
 
     Could be used for separating text or figures.
     """
-
+    __slots__ = ()
     def __init__(
         self,
         linewidth: float,
@@ -291,7 +293,7 @@ class LTRect(LTCurve):
 
     Could be used for framing another pictures or figures.
     """
-
+    __slots__ = ()
     def __init__(
         self,
         linewidth: float,
