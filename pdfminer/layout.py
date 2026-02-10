@@ -132,6 +132,7 @@ class LTText:
 
 class LTComponent(LTItem):
     """Object with a bounding box"""
+    __slots__ = ('bbox', 'matrix', '_objs') # type: ignore
 
     def __init__(self, bbox: Rect) -> None:
         LTItem.__init__(self)
