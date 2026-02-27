@@ -1,5 +1,6 @@
 import heapq
 import logging
+import sys
 from collections.abc import Iterable, Iterator, Sequence
 from typing import (
     Generic,
@@ -382,7 +383,7 @@ class LTChar(LTComponent, LTText):
         LTText.__init__(self)
         self._text = text
         self.matrix = matrix
-        self.fontname = font.fontname
+        self.fontname = sys.intern(font.fontname)
         self.ncs = ncs
         self.graphicstate = graphicstate
         self.adv = textwidth * fontsize * scaling
@@ -410,6 +411,8 @@ class LTChar(LTComponent, LTText):
         if font.is_vertical():
             self.size = self.width
         else:
+            # Bbox height is fontsize/2 for horizontal; report full font size.
+            # self.size = 2.0 * self.height
             self.size = self.height
 
     def __repr__(self) -> str:
@@ -430,6 +433,7 @@ LTItemT = TypeVar("LTItemT", bound=LTItem)
 
 class LTContainer(LTComponent, Generic[LTItemT]):
     """Object that can be extended and analyzed"""
+    __slots__ = ()
 
     def __init__(self, bbox: Rect) -> None:
         LTComponent.__init__(self, bbox)
@@ -454,6 +458,8 @@ class LTContainer(LTComponent, Generic[LTItemT]):
 
 
 class LTExpandableContainer(LTContainer[LTItemT]):
+    __slots__ = ()
+
     def __init__(self) -> None:
         LTContainer.__init__(self, (+INF, +INF, -INF, -INF))
 
@@ -472,6 +478,8 @@ class LTExpandableContainer(LTContainer[LTItemT]):
 
 
 class LTTextContainer(LTExpandableContainer[LTItemT], LTText):
+    __slots__ = ()
+
     def __init__(self) -> None:
         LTText.__init__(self)
         LTExpandableContainer.__init__(self)
@@ -670,6 +678,8 @@ class LTTextBox(LTTextContainer[LTTextLine]):
 
 
 class LTTextBoxHorizontal(LTTextBox):
+    __slots__ = ()
+
     def analyze(self, laparams: LAParams) -> None:
         super().analyze(laparams)
         self._objs.sort(key=lambda obj: -obj.y1)
@@ -679,6 +689,8 @@ class LTTextBoxHorizontal(LTTextBox):
 
 
 class LTTextBoxVertical(LTTextBox):
+    __slots__ = ()
+
     def analyze(self, laparams: LAParams) -> None:
         super().analyze(laparams)
         self._objs.sort(key=lambda obj: -obj.x1)
@@ -691,12 +703,16 @@ TextGroupElement = Union[LTTextBox, "LTTextGroup"]
 
 
 class LTTextGroup(LTTextContainer[TextGroupElement]):
+    __slots__ = ()
+
     def __init__(self, objs: Iterable[TextGroupElement]) -> None:
         super().__init__()
         self.extend(objs)
 
 
 class LTTextGroupLRTB(LTTextGroup):
+    __slots__ = ()
+
     def analyze(self, laparams: LAParams) -> None:
         super().analyze(laparams)
         assert laparams.boxes_flow is not None
@@ -709,6 +725,8 @@ class LTTextGroupLRTB(LTTextGroup):
 
 
 class LTTextGroupTBRL(LTTextGroup):
+    __slots__ = ()
+
     def analyze(self, laparams: LAParams) -> None:
         super().analyze(laparams)
         assert laparams.boxes_flow is not None
